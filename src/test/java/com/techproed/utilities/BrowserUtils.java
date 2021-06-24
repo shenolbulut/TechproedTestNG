@@ -17,7 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 
-public class BrowserUtils {
+public class
+BrowserUtils {
     /*
      * takes screenshot
      * @param name

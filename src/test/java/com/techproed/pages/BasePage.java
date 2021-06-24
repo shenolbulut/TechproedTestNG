@@ -4,8 +4,16 @@ import com.techproed.utilities.Driver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public abstract class BasePage {
+
+
+
 
     public BasePage(){
         PageFactory.initElements(Driver.get(),this);
@@ -49,9 +57,78 @@ public abstract class BasePage {
         element.click();
         Thread.sleep(5000);
 
-        WebElement altElm=Driver.get().findElement(By.xpath("//a/span[text()='"+subMenu+"']"));
+        WebElement altElm=Driver.get().findElement(By.partialLinkText(subMenu));
         altElm.click();
         Thread.sleep(5000);
+
+    }
+
+
+    public void navBar(String menu) throws InterruptedException {
+
+        Thread.sleep(5000);
+
+        WebElement element=Driver.get().findElement(By.xpath("//span[contains(*,'"+menu+"')]"));
+        element.click();
+
+    }
+
+    /*
+    method oluşturacaz
+    return = List<String>
+    parameter= List<WebElemt>
+
+     */
+
+    public List<String> getElementsText(List<WebElement> list) {
+        List<String> elemTexts = new ArrayList<>();
+
+        for (WebElement el : list) {
+            elemTexts.add(el.getText());
+        }
+        return elemTexts;
+    }
+
+
+    /*
+    method oluşturalım
+    return boolean
+    parameter String = Moda Ev ya
+     */
+
+    public boolean checkNavBar(String menu) throws InterruptedException {
+
+        WebElement element=Driver.get().findElement(By.xpath("//span[contains(*,'"+menu+"')]"));
+        element.click();
+
+        Thread.sleep(3000);
+        List<WebElement> tumLinkler = Driver.get().findElements(By.xpath("//*[@class='sf-ChildMenuItems-3VA7f']//a"));
+
+        List<String> subMenuText = getElementsText(tumLinkler);
+
+        System.out.println(subMenuText);
+
+        Random random=new Random();
+
+        int index=random.nextInt(subMenuText.size());
+        System.out.println(index);
+
+        String subTitle=subMenuText.get(index); //get(index)
+
+        System.out.println(subTitle);
+
+        navBar(menu,subTitle);
+
+        Thread.sleep(3000);
+
+        if(Driver.get().getTitle().contains(subTitle)){
+            return true;
+        }else{
+
+            System.out.println("Beklenilen Başlık: "+subTitle);
+            System.out.println("Gelen Başlık"+Driver.get().getTitle());
+            return false;
+        }
 
     }
 
