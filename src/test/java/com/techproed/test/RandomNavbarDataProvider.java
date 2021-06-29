@@ -44,7 +44,6 @@ public class RandomNavbarDataProvider {
     @Test(dataProvider = "navbarTest")
     public void test(String testSayisi, String menu) throws InterruptedException {
 
-        System.out.println(testSayisi);
         Assert.assertTrue(dashboard.checkNavBar(menu));
 
     }

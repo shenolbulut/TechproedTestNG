@@ -1,8 +1,12 @@
 package com.techproed.pages;
 
+import com.techproed.utilities.BrowserUtils;
 import com.techproed.utilities.Driver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 
@@ -50,18 +54,7 @@ public abstract class BasePage {
     returnType= void
     parameter= String, String
      */
-    public void navBar(String menuName, String subMenu) throws InterruptedException { //Moda, Elektronkik,
 
-        WebElement element=Driver.get().findElement(By.xpath("//span[contains(*,'"+menuName+"')]"));
-
-        element.click();
-        Thread.sleep(5000);
-
-        WebElement altElm=Driver.get().findElement(By.partialLinkText(subMenu));
-        altElm.click();
-        Thread.sleep(5000);
-
-    }
 
 
     public void navBar(String menu) throws InterruptedException {
@@ -129,6 +122,52 @@ public abstract class BasePage {
             System.out.println("Gelen Başlık"+Driver.get().getTitle());
             return false;
         }
+
+    }
+
+
+
+    public void navBar(String menuName, String subMenu) { //Moda, Elektronkik,
+
+        WebElement element=Driver.get().findElement(By.xpath("//span[contains(*,'"+menuName+"')]"));
+
+        WebElement altElm=Driver.get().findElement(By.partialLinkText(subMenu));
+
+        Actions actions=new Actions(Driver.get());
+
+        try{
+
+            element.click();
+
+        } catch (Exception e){
+
+            actions.click(element).perform();
+
+        }catch (Throwable e){
+
+            BrowserUtils.clickWithJS(element);
+
+        }
+
+
+        try{
+
+            altElm.click();
+
+        }catch (Exception e){
+
+            actions.click(altElm).perform();
+
+        }catch (Throwable t){
+
+            JavascriptExecutor js= (JavascriptExecutor) Driver.get();
+            js.executeScript("arguments[0].click();", altElm); // altElm.click()
+
+        }
+
+
+
+
 
     }
 
